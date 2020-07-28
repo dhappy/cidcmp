@@ -114,11 +114,13 @@ export default (props) => {
   }, [ipfs])
   
   return <div id='diff'>
-    <h1>{props.filename} {props.from && props.from.toString()}/{props.to && props.to.toString()}</h1>
-
-    <div className='status'>{status}</div>
+    <h1>{props.filename}</h1>
 
     <ol>
+      <li className='row'>
+        <span style={{display: 'inline-block', width: '50%'}}>{props.from && props.from.toString()}</span>
+        <span>{props.to && props.to.toString()}</span>
+      </li>
       {lines.map(({ start, right, left, rNum, lNum, type }, i) => {
         return (
           start

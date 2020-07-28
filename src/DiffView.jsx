@@ -20,11 +20,14 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
-  withoutLabel: {
-    marginTop: theme.spacing(3),
+  tick: {
+    display: 'inline-block',
+    minWidth: '3em',
+    textAlign: 'center',
   },
-  textField: {
-    width: '25ch',
+  content: {
+    width: '100%',
+    minHeight: '65em',
   },
 }))
 
@@ -101,55 +104,69 @@ export default () => {
   const mark = (cidOne, cidTwo) => {
     if(!cidOne && !cidTwo) {
       return <>
-        <span style={{display: 'inline-block', minWidth: '3em', textAlign: 'center'}}>From</span>
-        <span style={{display: 'inline-block', minWidth: '3em', textAlign: 'center'}}>To</span>
+        <span className={classes.tick}>From</span>
+        <span className={classes.tick}>To</span>
       </>
     } else if(cidOne && !cidTwo) {
       return <>
-        <span style={{display: 'inline-block', minWidth: '3em', textAlign: 'center'}} title={cidOne}>✖</span>
-        <span style={{display: 'inline-block', minWidth: '3em'}}></span>
+        <span className={classes.tick} title={cidOne}>✖</span>
+        <span className={classes.tick}></span>
       </>
     } else if(!cidOne && cidTwo) {
       return <>
-        <span style={{display: 'inline-block', minWidth: '3em'}}></span>
-        <span style={{display: 'inline-block', minWidth: '3em', textAlign: 'center'}} title={cidTwo}>✖</span>
+        <span className={classes.tick}></span>
+        <span className={classes.tick} title={cidTwo}>✖</span>
       </>
     } else if(cidOne.equals(cidTwo)) {
       return <>
-        <span style={{display: 'inline-block', minWidth: '3em', textAlign: 'center'}} title={cidOne}>✔</span>
-        <span style={{display: 'inline-block', minWidth: '3em', textAlign: 'center'}} title={cidTwo}>✔</span>
+        <span className={classes.tick} title={cidOne}>✔</span>
+        <span className={classes.tick} title={cidTwo}>✔</span>
       </>
     } else {
       return <>
-        <span style={{display: 'inline-block', minWidth: '3em', textAlign: 'center'}} title={cidOne}>✖</span>
-        <span style={{display: 'inline-block', minWidth: '3em', textAlign: 'center'}} title={cidTwo}>✖</span>
+        <span className={classes.tick} title={cidOne}>✖</span>
+        <span className={classes.tick} title={cidTwo}>✖</span>
       </>
     }
   }
 
-  const diffFor = (one, two) => {
+  const diffFor = (one, two, filename) => {
     if(one && !two) {
       return <>
         <h1>Removed</h1>
-        <iframe style={{backgroundColor: 'rgba(255, 0, 0, 0.25)'}} sandbox='' src={`//ipfs.io/ipfs/${one}`}/>
+        <iframe
+          className={classes.content}
+          style={{backgroundColor: 'rgba(255, 0, 0, 0.25)'}}
+          sandbox=''
+          src={`//ipfs.io/ipfs/${one}`}
+        />
       </>
     } else if(!one && two) {
       return <>
         <h1>Added</h1>
-        <iframe style={{backgroundColor: 'rgba(0, 255, 0, 0.25)'}} sandbox='' src={`//ipfs.io/ipfs/${two}`}/>
+        <iframe
+          className={classes.content}
+          style={{backgroundColor: 'rgba(0, 255, 0, 0.25)'}}
+          sandbox=''
+          src={`//ipfs.io/ipfs/${two}`}
+        />
       </>
     } else if(one.equals(two)) {
       return <>
         <h1>No Changes</h1>
-        <iframe sandbox='' src={`//ipfs.io/ipfs/${one}`}/>
+        <iframe
+          className={classes.content}
+          sandbox=''
+          src={`//ipfs.io/ipfs/${one}`}
+        />
       </>
     } else {
-      return <Diff from={one} to={two}/>
+      return <Diff from={one} to={two} filename={filename}/>
     }
   }
 
-  const fileItem = (file) => (
-    <TreeItem key={file.name} nodeId={file.name}
+  const fileItem = (file, depth = 1) => (
+    <TreeItem key={file.name} nodeId={`${depth}-${file.name}`}
       label={
         <div style={{display: 'flex'}}>
           <span>{file.name}</span>
@@ -158,9 +175,9 @@ export default () => {
           </span>
         </div>
       }
-      onClick={() => file.type === 'file' && setDiff(diffFor(file.cidOne, file.cidTwo))}
+      onClick={() => file.type === 'file' && setDiff(diffFor(file.cidOne, file.cidTwo, file.name))}
     >
-      {file.children ? file.children.map(child => fileItem(child)) : null}
+      {file.children ? file.children.map(child => fileItem(child, depth + 1)) : null}
     </TreeItem>
   )
 

@@ -120,7 +120,7 @@ export default (props) => {
         }
       }
     })()
-  }, [ipfs])
+  }, [ipfs, props.from, props.to])
   
   return <div id='diff'>
     <h1>{props.filename}</h1>

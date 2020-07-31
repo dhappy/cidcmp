@@ -20,11 +20,11 @@ const useStyles = makeStyles((theme) => ({
   },
   number: {
     paddingLeft: '0.25em',
-    border: '1px solid rgba(0, 0, 0, 0.25)',
+    border: '1px solid rgba(0, 0, 0, 0.05)',
   },
   text: {
     paddingLeft: '0.25em',
-    border: '1px solid rgba(0, 0, 0, 0.25)',
+    border: '1px solid rgba(0, 0, 0, 0.05)',
   },
 }))
 

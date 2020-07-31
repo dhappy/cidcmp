@@ -69,7 +69,6 @@ export default () => {
       <span> </span>to <span title={one}>{shortCID(one)}</span>
     </>
     const root = { name: title, children: await compare(one, two) }
-    console.info(root)
     setFiles([root])
   }
 
@@ -193,7 +192,7 @@ export default () => {
 
   return (
     <Container>
-      <span style={{marginRight: '1ex'}}>Replace</span>
+      <span style={{margin: '1ex'}}>Replace</span>
       <FormControl fullWidth className={classes.input} variant="outlined">
         <InputLabel htmlFor='fromCID'>From</InputLabel>
         <OutlinedInput

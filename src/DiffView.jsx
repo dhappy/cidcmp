@@ -13,12 +13,8 @@ import IPFSContext from './IPFSContext'
 import Diff from './Diff'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  margin: {
-    margin: theme.spacing(1),
+  input: {
+    margin: '1em 2em',
   },
   tick: {
     display: 'inline-block',
@@ -34,8 +30,13 @@ const useStyles = makeStyles((theme) => ({
 const shortCID = (cid) => `${cid.slice(0, 8)}…${cid.slice(-8)}`
 
 export default () => {
-  const [cidOne, setCIDOne] = useState('QmRqL7XqQPRbnuisxLaD2A9XVQLy8nnGgn7CvYN2w9qeY7')
-  const [cidTwo, setCIDTwo] = useState('QmRN4R2LkPF8e9k9VyBp4wsvkZSTcGn8wSTeDLUU1jdPLj')
+  const params = new URLSearchParams(window.location.search)
+  const [cidOne, setCIDOne] = useState(
+    params.get('from') || 'QmQHfgtBPbHZ2hBdk6TENupC9U4UdHzv7dQ45byAxy8fv1'
+  )
+  const [cidTwo, setCIDTwo] = useState(
+    params.get('to') || 'QmXJY6LBVdQjzpCwq8Vx5aJcC3zhDpZ74UWQ3rcP6X91NU'
+  )
   const [error, setError] = useState()
   const [diff, setDiff] = useState()
   const [files, setFiles] = useState([])
@@ -63,7 +64,10 @@ export default () => {
    *  5. Handle renamed files
    */
   const compareStart = async (one, two) => {
-    const title = `Comparing ${shortCID(one)} to ${shortCID(two)}`
+    const title = <>
+      Comparing <span onClick={() => diffFor(undefined, two)} title={two}>{shortCID(two)}</span>
+      <span> </span>to <span title={one}>{shortCID(one)}</span>
+    </>
     const root = { name: title, children: await compare(one, two) }
     console.info(root)
     setFiles([root])
@@ -190,7 +194,7 @@ export default () => {
   return (
     <Container>
       <span style={{marginRight: '1ex'}}>Replace</span>
-      <FormControl fullWidth className={classes.margin} variant="outlined">
+      <FormControl fullWidth className={classes.input} variant="outlined">
         <InputLabel htmlFor='fromCID'>From</InputLabel>
         <OutlinedInput
           id='fromCID'
@@ -203,7 +207,7 @@ export default () => {
         />
       </FormControl>
       <span style={{margin: 'auto 1ex'}}>with</span>
-      <FormControl fullWidth className={classes.margin} variant="outlined">
+      <FormControl fullWidth className={classes.input} variant="outlined">
         <InputLabel htmlFor='toCID'>To</InputLabel>
         <OutlinedInput
           id='toCID'

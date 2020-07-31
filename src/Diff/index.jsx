@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import * as Diff from 'diff'
+import { makeStyles } from '@material-ui/core'
 import IPFSContext from '../IPFSContext'
 import Line from './Line'
 import './index.scss'
@@ -7,10 +8,18 @@ import './index.scss'
 const isBinary = (str) => /[\x00-\x09\x0E-\x1F]/.test(str)
 const ipfsURL = (cid) => `//ipfs.io/ipfs/${cid}`
 
+const useStyles = makeStyles((theme) => ({
+  row: {
+    width: '100%',
+    display: 'flex',
+  },
+}))
+
 export default (props) => {
   const [ipfs] = useContext(IPFSContext)
   const [lines, setLines] = useState([])
   const [status, setStatus] = useState()
+  const classes = useStyles()
 
   const diffLines = (from, to) => {
     const patch = Diff.createPatch(props.filename, from, to).split("\n")
@@ -124,8 +133,8 @@ export default (props) => {
       {lines.map(({ start, right, left, rNum, lNum, type }, i) => {
         return (
           start
-          ? <li className='start row' key={i}>{start}</li>
-          : <li className={`${type} row`} key={i}>
+          ? <li className={`start ${classes.row}`} key={i}>{start}</li>
+          : <li className={`${type} ${classes.row}`} key={i}>
             <Line num={lNum} text={left} type='left'/>
             <Line num={rNum} text={right} type='right'/>
           </li>

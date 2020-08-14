@@ -1,4 +1,7 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# CID Comparator
+
+Compare the contents of two IPFS UnixFS directories. The page accepts `to` and `from` query parameters for the CIDs to use.
+
 
 ## Available Scripts
 
